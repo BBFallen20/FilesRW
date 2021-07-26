@@ -1,5 +1,4 @@
 import csv
-
 import openpyxl
 import xlsxwriter
 
@@ -40,8 +39,14 @@ class ReadHandler:
         return True
 
     def read(self) -> bool:
-        extensions = {'txt': self.read_txt, 'csv': self.read_csv, 'xlsx': self.read_xlsx, 'xls': self.read_txt}
-        path, extension = self.file_path.split('.') if self.file_path.__contains__('.') else [None, None]
+        """Main read method which calls another reading methods depending on the file extension"""
+        extensions = {
+            'txt': self.read_txt,
+            'csv': self.read_csv,
+            'xlsx': self.read_xlsx,
+            'xls': self.read_txt
+        }
+        extension = self.file_path.split('.')[-1] if self.file_path.__contains__('.') else None
         if extension in extensions:
             try:
                 return extensions[extension]()
@@ -84,13 +89,14 @@ class WriteHandler:
         return True
 
     def write(self) -> bool:
+        """Main write method which calls another writing methods depending on the file extension"""
         extensions = {
             'txt': self.write_txt_file,
             'csv': self.write_csv_file,
             'xlsx': self.write_xlsx_file,
             'xls': self.write_xlsx_file
         }
-        path, extension = self.file_path.split('.') if self.file_path.__contains__('.') else [None, None]
+        extension = self.file_path.split('.')[-1] if self.file_path.__contains__('.') else None
         if extension in extensions:
             try:
                 return extensions[extension]()
