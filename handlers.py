@@ -6,7 +6,7 @@ import xlsxwriter
 class ReadHandler:
     def __init__(self, file_path: str):
         self.file_path = file_path
-        self.file_extension = file_path.split('.')[-1]
+        self.file_extension = self.file_path.split('.')[-1] if self.file_path.__contains__('.') else None
 
     def read_txt(self) -> bool:
         with open(self.file_path, 'r') as File:
@@ -46,10 +46,9 @@ class ReadHandler:
             'xlsx': self.read_xlsx,
             'xls': self.read_txt
         }
-        extension = self.file_path.split('.')[-1] if self.file_path.__contains__('.') else None
-        if extension in extensions:
+        if self.file_extension in extensions:
             try:
-                return extensions[extension]()
+                return extensions[self.file_extension]()
             except FileNotFoundError:
                 print('File not found.')
             except PermissionError:
@@ -96,10 +95,9 @@ class WriteHandler:
             'xlsx': self.write_xlsx_file,
             'xls': self.write_xlsx_file
         }
-        extension = self.file_path.split('.')[-1] if self.file_path.__contains__('.') else None
-        if extension in extensions:
+        if self.file_extension in extensions:
             try:
-                return extensions[extension]()
+                return extensions[self.file_extension]()
             except FileNotFoundError:
                 print('File not found.')
             except PermissionError:
