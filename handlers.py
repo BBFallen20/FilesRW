@@ -49,6 +49,8 @@ class CSVHandler(ExtensionHandler):
                 counter += 1
                 if counter == 5:
                     break
+            if counter == 0:
+                return False
         return True
 
     @ExtensionHandler.error_wrapper
@@ -86,8 +88,12 @@ class XLSXHandler(ExtensionHandler):
         with open(self.file_path, 'r'):
             wb_obj = openpyxl.load_workbook(self.file_path)
         sheet = wb_obj.active
+        counter = 0
         for row in sheet.iter_rows(max_row=5):
             for cell in row:
+                if cell.value is None and counter == 0:
+                    print('File is empty')
+                    return False
                 print(cell.value, end=" ")
             print()
         return True

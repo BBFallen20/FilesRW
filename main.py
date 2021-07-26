@@ -1,5 +1,5 @@
 import argparse
-from handlers import CSVHandler, TXTHandler, XLSXHandler
+from handlers import CSVHandler, TXTHandler, XLSXHandler, ExtensionHandler
 
 
 def choose_mode(mode: str, file_path: str) -> bool:
@@ -11,15 +11,11 @@ def choose_mode(mode: str, file_path: str) -> bool:
         'xlsx': XLSXHandler,
         'xls': CSVHandler
     }
-    if file_extension in extensions:
-        if mode == 'read':
-            completed = extensions[file_extension](file_path).read()
-        elif mode == 'write':
-            completed = extensions[file_extension](file_path).write()
-        else:
-            print('Unknown mode')
+    extension_found = extensions.get(file_extension)
+    if extension_found and mode == 'write' or mode == 'read':
+        extension_found(file_path).write() if mode == 'write' else extension_found(file_path).read()
     else:
-        print('Unknown file extension.')
+        print('Unknown file extension or mode. ')
     return completed
 
 
@@ -31,7 +27,13 @@ if __name__ == '__main__':
         type=str,
         help='application mode'
     )
+    parser.add_argument(
+        'path',
+        metavar='path',
+        type=str,
+        help='file path'
+    )
     args = parser.parse_args()
     selected_mode = args.mode.lower()
-    path = input('Enter file path(full):\n')
+    path = args.path
     choose_mode(selected_mode, path)
