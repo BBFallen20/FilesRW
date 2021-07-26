@@ -1,16 +1,23 @@
 import argparse
-from handlers import ReadHandler, WriteHandler
+from handlers import CSVHandler, TXTHandler, XLSXHandler
 
 
-def choose_mode(mode: str) -> bool:
-    modes = {'read': ReadHandler, 'write': WriteHandler}
+def choose_mode(mode: str, file_path: str) -> bool:
+    file_extension = file_path.split('.')[-1] if file_path.__contains__('.') else ''
     completed = False
-    if mode == 'read':
-        completed = modes[mode](input('Enter file path:\n')).read()
-    elif mode == 'write':
-        completed = modes[mode](input('Enter file path:\n')).write()
-    else:
-        print('Error. Mode does not exist.')
+    extensions = {
+        'txt': TXTHandler,
+        'csv': CSVHandler,
+        'xlsx': XLSXHandler,
+        'xls': CSVHandler
+    }
+    if file_extension in extensions:
+        if mode == 'read':
+            completed = extensions[file_extension](file_path).read()
+        elif mode == 'write':
+            completed = extensions[file_extension](file_path).write()
+        else:
+            print('Unknown mode')
     return completed
 
 
@@ -24,4 +31,5 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
     selected_mode = args.mode.lower()
-    choose_mode(selected_mode)
+    path = input('Enter file path:\n')
+    choose_mode(selected_mode, path)
