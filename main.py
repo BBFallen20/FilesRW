@@ -18,6 +18,8 @@ def choose_mode(mode: str, file_path: str) -> bool:
             completed = extensions[file_extension](file_path).write()
         else:
             print('Unknown mode')
+    else:
+        print('Unknown file extension.')
     return completed
 
 
@@ -31,5 +33,5 @@ if __name__ == '__main__':
     )
     args = parser.parse_args()
     selected_mode = args.mode.lower()
-    path = input('Enter file path:\n')
+    path = input('Enter file path(full):\n')
     choose_mode(selected_mode, path)

@@ -8,6 +8,8 @@ import xlsxwriter
 
 class ExtensionHandler(ABC):
     def __init__(self, file_path: str):
+        if self.__class__ == 'ExtensionHandler':
+            raise Exception('Abstract class constructor call')
         self.file_path = file_path
 
     @abstractmethod
@@ -81,7 +83,7 @@ class TXTHandler(ExtensionHandler):
 class XLSXHandler(ExtensionHandler):
     @ExtensionHandler.error_wrapper
     def read(self):
-        with open(self.file_path, 'r') as File:
+        with open(self.file_path, 'r'):
             wb_obj = openpyxl.load_workbook(self.file_path)
         sheet = wb_obj.active
         for row in sheet.iter_rows(max_row=5):
@@ -92,7 +94,7 @@ class XLSXHandler(ExtensionHandler):
 
     @ExtensionHandler.error_wrapper
     def write(self):
-        with open(self.file_path, 'r') as File:
+        with open(self.file_path, 'r'):
             workbook = xlsxwriter.Workbook(self.file_path)
         worksheet = workbook.add_worksheet('test')
         data_list = [input('Enter column:\n') for _ in range(int(input('Enter columns amount:\n')))]
@@ -101,4 +103,3 @@ class XLSXHandler(ExtensionHandler):
         workbook.close()
         print('File extended successfully.')
         return True
-
