@@ -1,6 +1,7 @@
 import unittest
 
-from main import choose_mode, read_mode, write_mode
+from main import choose_mode
+from handlers import ReadHandler, WriteHandler
 
 
 class TestAppLogic(unittest.TestCase):
@@ -9,13 +10,13 @@ class TestAppLogic(unittest.TestCase):
         self.assertFalse(choose_mode('any_mode'))
 
     def test_read_file(self):
-        self.assertFalse(read_mode('/home'))
-        self.assertFalse(read_mode('/home/file.txt'))
-        self.assertTrue(read_mode('/home/user/PycharmProjects/FilesRW/100 Sales Records.csv'))
+        self.assertFalse(ReadHandler('/home').read())
+        self.assertFalse(ReadHandler('/home/file.txt').read())
+        self.assertTrue(ReadHandler('/home/user/PycharmProjects/FilesRW/100 Sales Records.csv').read())
 
     def test_write_to_file(self):
-        self.assertFalse(write_mode('/home'))
-        self.assertFalse(write_mode('/home/user/folder/file.txt'))
+        self.assertFalse(WriteHandler('/home').write())
+        self.assertFalse(WriteHandler('/home/user/folder/file.txt').write())
 
 
 if __name__ == '__main__':
